@@ -1,0 +1,32 @@
+@layout()
+  <div class="form-container">
+    <div>
+      <h1>Iniciar sesión</h1>
+      <p>Ingresa tu correo y contraseña para acceder.</p>
+    </div>
+
+    <div>
+      @form({ route: 'session.store', method: 'POST' })
+        <div>
+          @field.root({ name: 'email' })
+            @!field.label({ text: 'Correo electrónico' })
+            @!input.control({ type: 'email' })
+            @!field.error()
+          @end
+        </div>
+
+        <div>
+          @field.root({ name: 'password' })
+            @!field.label({ text: 'Contraseña' })
+            @!input.control({ type: 'password' })
+            @!field.error()
+          @end
+        </div>
+
+        <div>
+          @!button({ text: 'Iniciar sesión', type: 'submit' })
+        </div>
+      @end
+    </div>
+  </div>
+@end

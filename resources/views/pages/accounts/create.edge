@@ -1,0 +1,25 @@
+@layout()
+  <div class="form-container">
+    <h1>Nueva Cuenta</h1>
+    <p>Agrega una cuenta nueva a tu libreta.</p>
+
+    @form({ route: 'accounts.store', method: 'POST' })
+      @field.root({ name: 'name' })
+        @!field.label({ text: 'Nombre de la cuenta' })
+        @!input.control({ type: 'text', placeholder: 'ej. Cuenta corriente (USD)' })
+        @!field.error()
+      @end
+
+      @field.root({ name: 'currency' })
+        @!field.label({ text: 'Moneda' })
+        @!select.control({ options: [
+          { value: 'USD', name: 'USD' },
+          { value: 'CUP', name: 'CUP' },
+        ]})
+        @!field.error()
+      @end
+
+      @!button({ text: 'Crear Cuenta' })
+    @end
+  </div>
+@end

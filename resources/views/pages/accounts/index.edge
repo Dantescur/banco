@@ -1,0 +1,43 @@
+@layout()
+<div class="page-header">
+  <h1>Cuentas</h1>
+  @!link({ route: 'accounts.create', text: '+ Nueva Cuenta' })
+</div>
+
+<div class="section" style="padding: 0.5rem;">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Moneda</th>
+          <th>Saldo</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @each(account in accounts)
+        <tr>
+          <td>
+            @!link({ route: 'accounts.show', routeParams: { id: account.id }, text: account.name })
+          </td>
+          <td><span class="currency-badge">{{ account.currency }}</span></td>
+          <td class="{{ account.balance >= 0 ? 'positive' : 'negative' }}">
+            ${{ Number(account.balance).toFixed(2) }}
+          </td>
+          <td class="actions">
+            @!link({ route: 'accounts.edit', routeParams: { id: account.id }, text: 'Renombrar' })
+          </td>
+        </tr>
+        @end
+      </tbody>
+    </table>
+  </div>
+
+  @if(accounts.length === 0)
+  <div class="empty-state">
+    <p>No hay cuentas aún. Crea una para empezar.</p>
+  </div>
+  @end
+</div>
+@end

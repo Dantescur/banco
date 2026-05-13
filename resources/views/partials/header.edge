@@ -1,0 +1,41 @@
+<header x-data="headerMenu">
+  <div>
+    <a href="{{ urlFor('home') }}" class="brand">KoilSend <span>ledger</span></a>
+    <button class="hamburger" @click.stop="toggle" :class="{ 'is-active': open }" aria-label="Menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav :class="{ 'is-open': open }" @click.away="close">
+      @if(auth.user)
+      <div class="nav-links">
+        @!link({ route: 'accounts.index', text: 'Cuentas' })
+        @!link({ route: 'settings.index', text: 'Configuración' })
+      </div>
+      <div class="nav-meta">
+        <span class="avatar">{{ auth.user.initials }}</span>
+        @form({ route: 'session.destroy', method: 'POST' })
+        @!button({ text: 'Cerrar sesión' })
+        @end
+      </div>
+      @else
+      <div class="nav-links">
+        @!link({ route: 'session.create', text: 'Iniciar sesión' })
+        @!link({ route: 'new_account.create', text: 'Registrarse' })
+      </div>
+      @end
+    </nav>
+  </div>
+</header>
+
+@pushOnceTo('js')
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('headerMenu', () => ({
+      open: false,
+      toggle() { this.open = !this.open },
+      close() { this.open = false },
+    }))
+  })
+</script>
+@end

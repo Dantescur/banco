@@ -1,0 +1,96 @@
+@layout()
+  @if(auth.user)
+    <div class="dash-intro">
+      <h1>Panel de control</h1>
+      <p>Resumen de tu libreta en {{ accounts.length }} cuenta{{ accounts.length !== 1 ? 's' : '' }}.</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Balance USD</span>
+        <span class="stat-value">${{ Number(totalUsd).toFixed(2) }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Balance CUP</span>
+        <span class="stat-value">${{ Number(totalCup).toFixed(2) }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Cuentas</span>
+        <span class="stat-value">{{ accounts.length }}</span>
+      </div>
+      <div class="stat-card stat-card-action">
+        @!link({ route: 'accounts.create', text: '+ Nueva Cuenta' })
+      </div>
+    </div>
+
+    @if(accounts.length > 0)
+      <div class="dash-section">
+        <h2>Cuentas</h2>
+        <div class="account-grid">
+          @each(account in accounts)
+            <a href="{{ urlFor('accounts.show', { id: account.id }) }}" class="account-card">
+              <div class="account-card-top">
+                <span class="account-card-name">{{ account.name }}</span>
+                <span class="currency-badge">{{ account.currency }}</span>
+              </div>
+              <span class="account-card-balance {{ account.balance >= 0 ? 'positive' : 'negative' }}">
+                ${{ Number(account.balance).toFixed(2) }}
+              </span>
+            </a>
+          @end
+        </div>
+      </div>
+
+      @if(recentTransactions.length > 0)
+        <div class="dash-section">
+          <h2>Actividad Reciente</h2>
+          <div class="section">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Cuenta</th>
+                    <th>Tipo</th>
+                    <th>Monto</th>
+                    <th>Descripción</th>
+                    <th>Por</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @each(tx in recentTransactions)
+                    <tr>
+                      <td>{{ tx.createdAt.toFormat('dd MMM, HH:mm') }}</td>
+                      <td>
+                        @!link({ route: 'accounts.show', routeParams: { id: tx.account.id }, text: tx.account.name })
+                      </td>
+                      <td>{{ tx.type === 'in' ? 'Ingreso' : 'Gasto' }}</td>
+                      <td class="{{ tx.type === 'in' ? 'positive' : 'negative' }}">
+                        {{ tx.type === 'in' ? '+' : '-' }}${{ Number(tx.amount).toFixed(2) }}
+                      </td>
+                      <td>{{ tx.description ?? '&mdash;' }}</td>
+                      <td>{{ tx.user.fullName ?? tx.user.email }}</td>
+                    </tr>
+                  @end
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      @end
+    @else
+      <div class="empty-state" style="margin-top: 48px;">
+        <p>No hay cuentas aún. Crea tu primera cuenta para empezar.</p>
+      </div>
+    @end
+  @else
+    <div class="hero">
+      <h1>Libreta compartida.</h1>
+      <p>Control de ingresos y gastos multiusuario. Todos ven todo.</p>
+      <div class="hero-actions">
+        @!link({ route: 'session.create', text: 'Iniciar sesión' })
+        @!link({ route: 'new_account.create', text: 'Registrarse' })
+      </div>
+    </div>
+  @end
+@end

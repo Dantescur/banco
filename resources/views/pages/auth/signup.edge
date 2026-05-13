@@ -1,0 +1,56 @@
+@layout()
+  <div class="form-container">
+    <div>
+      <h1>Registrarse</h1>
+      <p>Crea tu cuenta para acceder a la libreta compartida.</p>
+    </div>
+
+    <div>
+      @form({ route: 'new_account.store', method: 'POST' })
+        <div>
+          @field.root({ name: 'fullName' })
+            @!field.label({ text: 'Nombre completo' })
+            @!input.control()
+            @!field.error()
+          @end
+        </div>
+
+        <div>
+          @field.root({ name: 'email' })
+            @!field.label({ text: 'Correo electrónico' })
+            @!input.control({ type: 'email', autocomplete: 'email' })
+            @!field.error()
+          @end
+        </div>
+
+        <div>
+          @field.root({ name: 'password' })
+            @!field.label({ text: 'Contraseña' })
+            @!input.control({ type: 'password', autocomplete: 'new-password' })
+            @!field.error()
+          @end
+        </div>
+
+        <div>
+          @field.root({ name: 'passwordConfirmation' })
+            @!field.label({ text: 'Confirmar contraseña' })
+            @!input.control({ type: 'password', autocomplete: 'new-password' })
+            @!field.error()
+          @end
+        </div>
+
+        <div>
+          @field.root({ name: 'inviteCode' })
+            @!field.label({ text: 'Código de invitación' })
+            @!input.control({ type: 'text', autocomplete: 'off' })
+            @!field.error()
+          @end
+        </div>
+
+        <div>
+          @!button({ text: 'Registrarse', type: 'submit' })
+        </div>
+      @end
+    </div>
+  </div>
+@end

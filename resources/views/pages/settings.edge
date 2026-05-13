@@ -1,0 +1,47 @@
+@layout()
+  <div class="dash-intro">
+    <h1>Configuración</h1>
+    <p>Administra los códigos de invitación para nuevos usuarios.</p>
+  </div>
+
+  <div class="dash-section">
+    <h2>Generar código de invitación</h2>
+    <div class="section">
+      @form({ route: 'settings.generate', method: 'POST' })
+        @!button({ text: 'Generar nuevo código' })
+      @end
+    </div>
+  </div>
+
+  <div class="dash-section">
+    <h2>Códigos existentes</h2>
+    <div class="section">
+      @if(inviteCodes.length > 0)
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Estado</th>
+                <th>Usado por</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              @each(code in inviteCodes)
+                <tr>
+                  <td><code>{{ code.code }}</code></td>
+                  <td>{{ code.used ? 'Usado' : 'Disponible' }}</td>
+                  <td>{{ code.usedBy ?? '—' }}</td>
+                  <td>{{ code.createdAt.toFormat('dd MMM yyyy') }}</td>
+                </tr>
+              @end
+            </tbody>
+          </table>
+        </div>
+      @else
+        <p>No hay códigos de invitación. Genera uno arriba.</p>
+      @end
+    </div>
+  </div>
+@end

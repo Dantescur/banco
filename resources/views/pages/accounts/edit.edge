@@ -1,0 +1,26 @@
+@layout()
+  <div class="form-container">
+    <h1>Renombrar Cuenta</h1>
+    <p>{{ account.name }} <span class="currency-badge">{{ account.currency }}</span></p>
+
+    @form({ route: 'accounts.update', routeParams: { id: account.id }, method: 'POST' })
+      <input type="hidden" name="_method" value="PUT" />
+
+      @field.root({ name: 'name' })
+        @!field.label({ text: 'Nombre de la cuenta' })
+        @!input.control({ type: 'text', value: account.name })
+        @!field.error()
+      @end
+
+      @!button({ text: 'Guardar' })
+    @end
+
+    <div class="danger-zone">
+      <p class="danger-zone-label">Zona de peligro</p>
+      @form({ route: 'accounts.destroy', routeParams: { id: account.id }, method: 'POST' })
+        <input type="hidden" name="_method" value="DELETE" />
+        <button class="danger" x-data @click.prevent="if (confirm('¿Eliminar esta cuenta y TODAS sus transacciones? Esta acción no se puede deshacer.')) $el.closest('form').submit()">Eliminar Cuenta</button>
+      @end
+    </div>
+  </div>
+@end
