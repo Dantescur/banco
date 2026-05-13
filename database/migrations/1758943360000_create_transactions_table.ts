@@ -6,7 +6,12 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').notNullable()
-      table.integer('account_id').unsigned().references('id').inTable('accounts').onDelete('CASCADE')
+      table
+        .integer('account_id')
+        .unsigned()
+        .references('id')
+        .inTable('accounts')
+        .onDelete('CASCADE')
       table.enu('type', ['in', 'out']).notNullable()
       table.decimal('amount', 12, 2).notNullable()
       table.string('description').nullable()

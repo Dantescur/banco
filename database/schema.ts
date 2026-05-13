@@ -25,7 +25,18 @@ export class AccountSchema extends BaseModel {
 }
 
 export class AuditLogSchema extends BaseModel {
-  static $columns = ['action', 'after', 'before', 'createdAt', 'entityId', 'entityType', 'id', 'ipAddress', 'userAgent', 'userId'] as const
+  static $columns = [
+    'action',
+    'after',
+    'before',
+    'createdAt',
+    'entityId',
+    'entityType',
+    'id',
+    'ipAddress',
+    'userAgent',
+    'userId',
+  ] as const
   $columns = AuditLogSchema.$columns
   @column()
   declare action: string
@@ -69,7 +80,15 @@ export class InviteCodeSchema extends BaseModel {
 }
 
 export class TransactionSchema extends BaseModel {
-  static $columns = ['accountId', 'amount', 'createdAt', 'description', 'id', 'type', 'userId'] as const
+  static $columns = [
+    'accountId',
+    'amount',
+    'createdAt',
+    'description',
+    'id',
+    'type',
+    'userId',
+  ] as const
   $columns = TransactionSchema.$columns
   @column()
   declare accountId: number | null
