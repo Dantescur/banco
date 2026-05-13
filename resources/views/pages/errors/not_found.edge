@@ -1,8 +1,10 @@
-<h1>
-  404 - Page not found
-</h1>
-<p>
-  This template is rendered by the
-  <a href="http://docs.adonisjs.com/guides/exception-handling#status-pages">status pages feature</a>
-  of the global exception handler.
-</p>
+@layout()
+  <div class="hero" style="text-align:center">
+    <h1>404</h1>
+    <p style="font-size:18px;margin-bottom:8px">P&aacute;gina no encontrada</p>
+    <p style="color:var(--text-muted)">La p&aacute;gina que buscas no existe o fue movida.</p>
+    <div class="hero-actions" style="justify-content:center;margin-top:24px">
+      <a href="/">Volver al inicio</a>
+    </div>
+  </div>
+@end

@@ -1,8 +1,10 @@
-<h1>
-  {{ error.code }} - Server error
-</h1>
-<p>
-  This template is rendered by the
-  <a href="http://docs.adonisjs.com/guides/exception-handling#status-pages">status pages feature</a>
-  of the global exception handler.
-</p>
+@layout()
+  <div class="hero" style="text-align:center">
+    <h1>Error</h1>
+    <p style="font-size:18px;margin-bottom:8px">Algo sali&oacute; mal</p>
+    <p style="color:var(--text-muted)">Ocurri&oacute; un error inesperado. Intenta de nuevo m&aacute;s tarde.</p>
+    <div class="hero-actions" style="justify-content:center;margin-top:24px">
+      <a href="/">Volver al inicio</a>
+    </div>
+  </div>
+@end

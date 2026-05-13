@@ -14,14 +14,24 @@ const shieldConfig = defineConfig({
     /**
      * Enable Content Security Policy headers.
      * CSP helps prevent XSS attacks by controlling which resources can be loaded.
+     * 'unsafe-inline' is required for Alpine.js @click and similar inline handlers.
      */
-    enabled: false,
+    enabled: true,
 
     /**
      * CSP directives define the allowed sources for different resource types.
-     * Example: { defaultSrc: ["'self'"], scriptSrc: ["'self'", "'unsafe-inline'"] }
      */
-    directives: {},
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+      imgSrc: ["'self'", 'data:'],
+      connectSrc: ["'self'"],
+      frameAncestors: ["'none'"],
+      formAction: ["'self'"],
+      baseUri: ["'none'"],
+    },
 
     /**
      * When true, CSP violations are reported but not enforced.
