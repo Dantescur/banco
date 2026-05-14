@@ -8,7 +8,16 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class AccountSchema extends BaseModel {
-  static $columns = ['balance', 'createdAt', 'currency', 'id', 'name', 'updatedAt'] as const
+  static $columns = [
+    'balance',
+    'createdAt',
+    'currency',
+    'id',
+    'name',
+    'updatedAt',
+    'userId',
+    'visibility',
+  ] as const
   $columns = AccountSchema.$columns
   @column()
   declare balance: number
@@ -22,6 +31,10 @@ export class AccountSchema extends BaseModel {
   declare name: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+  @column()
+  declare userId: number | null
+  @column()
+  declare visibility: string
 }
 
 export class AuditLogSchema extends BaseModel {

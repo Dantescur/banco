@@ -19,6 +19,23 @@
         @!field.error()
       @end
 
+      <div x-data="{ visibility: 'shared' }">
+        @field.root({ name: 'visibility' })
+          @!field.label({ text: 'Visibilidad' })
+          <select x-model="visibility" name="visibility" class="" id="field_visibility">
+            <option value="shared">Compartida (visible para todos)</option>
+            <option value="private">Privada (solo para ti)</option>
+          </select>
+          @!field.error()
+        @end
+        <p x-show="visibility === 'private'" style="font-size:12px;color:var(--text-muted);margin-top:4px">
+          Solo t&uacute; podr&aacute;s ver y administrar esta cuenta.
+        </p>
+        <p x-show="visibility === 'shared'" style="font-size:12px;color:var(--text-muted);margin-top:4px">
+          Todos los usuarios autenticados podr&aacute;n ver y administrar esta cuenta.
+        </p>
+      </div>
+
       @!button({ text: 'Crear Cuenta' })
     @end
   </div>

@@ -10,8 +10,18 @@ router
       return view.render('pages/home')
     }
 
-    const accounts = await Account.query().orderBy('name')
+    const accounts = await Account.query()
+      .where((query) => {
+        query.where('visibility', 'shared')
+        query.orWhere('user_id', auth.user!.id)
+      })
+      .orderBy('name')
+
     const recentTransactions = await Transaction.query()
+      .whereIn(
+        'account_id',
+        accounts.map((a) => a.id)
+      )
       .preload('account')
       .preload('user')
       .orderBy('createdAt', 'desc')

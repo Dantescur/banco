@@ -5,8 +5,17 @@ import AuditLogService from '#services/audit_log_service'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class AccountsController {
-  async index({ view }: HttpContext) {
-    const accounts = await Account.query().orderBy('name')
+  async index({ view, auth }: HttpContext) {
+    const accounts = await Account.query()
+      .where((query) => {
+        query.where('visibility', 'shared')
+        if (auth.user) {
+          query.orWhere('user_id', auth.user.id)
+        }
+      })
+      .preload('owner')
+      .orderBy('name')
+
     return view.render('pages/accounts/index', { accounts })
   }
 
@@ -20,6 +29,8 @@ export default class AccountsController {
       name: payload.name,
       currency: payload.currency,
       balance: 0,
+      visibility: payload.visibility,
+      userId: payload.visibility === 'private' ? auth.user!.id : null,
     })
 
     await AuditLogService.log({
@@ -27,7 +38,7 @@ export default class AccountsController {
       action: 'create',
       entityType: 'account',
       entityId: account.id,
-      after: { name: account.name, currency: account.currency },
+      after: { name: account.name, currency: account.currency, visibility: account.visibility },
       ipAddress: request.ip(),
       userAgent: request.header('user-agent'),
     })
@@ -36,10 +47,16 @@ export default class AccountsController {
     response.redirect().toRoute('accounts.index')
   }
 
-  async show({ params, request, view }: HttpContext) {
+  async show({ params, request, view, auth, response, session }: HttpContext) {
     const account = await Account.findOrFail(params.id)
-    const page = request.input('page', 1)
 
+    if (account.isPrivate && account.userId !== auth.user?.id) {
+      session.flash('error', 'No tienes acceso a esta cuenta')
+      response.redirect().toRoute('accounts.index')
+      return
+    }
+
+    const page = request.input('page', 1)
     const transactions = await Transaction.query()
       .where('accountId', account.id)
       .orderBy('createdAt', 'desc')
@@ -58,13 +75,27 @@ export default class AccountsController {
     return view.render('pages/accounts/show', { account, transactions, groups })
   }
 
-  async edit({ params, view }: HttpContext) {
+  async edit({ params, view, auth, response, session }: HttpContext) {
     const account = await Account.findOrFail(params.id)
+
+    if (account.isPrivate && account.userId !== auth.user?.id) {
+      session.flash('error', 'No tienes acceso a esta cuenta')
+      response.redirect().toRoute('accounts.index')
+      return
+    }
+
     return view.render('pages/accounts/edit', { account })
   }
 
   async update({ params, request, response, session, auth }: HttpContext) {
     const account = await Account.findOrFail(params.id)
+
+    if (account.isPrivate && account.userId !== auth.user?.id) {
+      session.flash('error', 'No tienes acceso a esta cuenta')
+      response.redirect().toRoute('accounts.index')
+      return
+    }
+
     const before = { name: account.name }
     const payload = await request.validateUsing(updateAccountValidator)
 
@@ -88,6 +119,13 @@ export default class AccountsController {
 
   async destroy({ params, response, session, auth, request }: HttpContext) {
     const account = await Account.findOrFail(params.id)
+
+    if (account.isPrivate && account.userId !== auth.user?.id) {
+      session.flash('error', 'No tienes acceso a esta cuenta')
+      response.redirect().toRoute('accounts.index')
+      return
+    }
+
     const snapshot = { name: account.name, currency: account.currency, balance: account.balance }
 
     await account.delete()
