@@ -30,7 +30,11 @@
           @each(account in accounts)
             <a href="{{ urlFor('accounts.show', { id: account.id }) }}" class="account-card">
               <div class="account-card-top">
-                <span class="account-card-name">{{ account.name }}</span>
+                <span class="account-card-name">{{ account.name }}
+                  @if(account.isPrivate)
+                      <span class="badge-private">Privada</span>
+                  @end
+                </span>
                 <span class="currency-badge">{{ account.currency }}</span>
               </div>
               <span class="account-card-balance {{ account.balance >= 0 ? 'positive' : 'negative' }}">

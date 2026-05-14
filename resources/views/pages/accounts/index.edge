@@ -20,6 +20,9 @@
         <tr>
           <td>
             @!link({ route: 'accounts.show', routeParams: { id: account.id }, text: account.name })
+            @if(account.isPrivate)
+            <span class="badge-private">Privada</span>
+            @end
           </td>
           <td><span class="currency-badge">{{ account.currency }}</span></td>
           <td class="{{ account.balance >= 0 ? 'positive' : 'negative' }}">
